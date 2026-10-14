@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VANTA Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h1 class="logo">VANTA</h1>
+      <p class="login-sub">Admin Dashboard</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" required value="mustafa@vanta.pk" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+        <p id="loginError" class="error-msg"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="dashboard hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand">VANTA</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="overview">Overview</button>
+        <button class="nav-item" data-view="products">Products</button>
+        <button class="nav-item" data-view="orders">Orders</button>
+      </nav>
+      <button class="logout-btn" id="logoutBtn">Sign Out</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h2 id="pageTitle">Overview</h2>
+        <span class="admin-email" id="adminEmail"></span>
+      </header>
+
+      <!-- OVERVIEW -->
+      <section id="view-overview" class="view">
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card"><span class="stat-label">Total Orders</span><span class="stat-value" id="statOrders">—</span></div>
+          <div class="stat-card"><span class="stat-label">Total Sales</span><span class="stat-value" id="statSales">—</span></div>
+          <div class="stat-card"><span class="stat-label">Products</span><span class="stat-value" id="statProducts">—</span></div>
+          <div class="stat-card"><span class="stat-label">Low Stock</span><span class="stat-value" id="statLowStock">—</span></div>
+        </div>
+        <div class="panel">
+          <h3>Best Selling Products</h3>
+          <ul id="bestSellers" class="best-list"></ul>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section id="view-products" class="view hidden">
+        <div class="toolbar">
+          <button class="btn btn-primary" id="addProductBtn">+ Add Product</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Active</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="view-orders" class="view hidden">
+        <div class="toolbar">
+          <input type="text" id="orderSearch" placeholder="Search orders..." class="search-input" />
+          <select id="statusFilter" class="select-input">
+            <option value="all">All Statuses</option>
+            <option value="New">New</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Dispatched">Dispatched</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PRODUCT MODAL -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="productModalTitle">Add Product</h3>
+        <button class="modal-close" id="productModalClose">✕</button>
+      </div>
+      <form id="productForm" class="modal-body">
+        <input type="hidden" id="productId" />
+        <div class="form-row">
+          <label>Name *</label>
+          <input type="text" id="pName" required />
+        </div>
+        <div class="form-row">
+          <label>Description</label>
+          <textarea id="pDesc" rows="3"></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Price (PKR) *</label>
+            <input type="number" id="pPrice" required min="0" />
+          </div>
+          <div class="form-row">
+            <label>Stock *</label>
+            <input type="number" id="pStock" required min="0" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Category</label>
+          <select id="pCategory">
+            <option>T-Shirts</option>
+            <option>Hoodies</option>
+            <option>Pants</option>
+            <option>Accessories</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Sizes (comma separated)</label>
+          <input type="text" id="pSizes" placeholder="S, M, L, XL" value="S, M, L, XL" />
+        </div>
+        <div class="form-row">
+          <label>Colors (comma separated)</label>
+          <input type="text" id="pColors" placeholder="Black, White, Grey" value="Black, White" />
+        </div>
+        <div class="form-row">
+          <label>Image</label>
+          <input type="file" id="pImage" accept="image/*" />
+          <input type="hidden" id="pImageUrl" />
+          <img id="pImagePreview" class="img-preview hidden" />
+        </div>
+        <div class="form-row">
+          <label><input type="checkbox" id="pActive" checked /> Active</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Save Product</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ORDER DETAIL MODAL -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3 id="orderModalTitle">Order Details</h3>
+        <button class="modal-close" id="orderModalClose">✕</button>
+      </div>
+      <div class="modal-body" id="orderDetailBody"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
